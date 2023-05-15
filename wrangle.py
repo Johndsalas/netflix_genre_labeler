@@ -48,6 +48,8 @@ def get_genre_columns(df):
     gens = df[['genres']].explode('genres')
 
     gen_set = set(gens.genres.to_list())
+    
+    gen_set.remove('western')
 
     # for each unique genre add a column genre_name displaying if the show is in that genre
     for gen in gen_set:
@@ -130,3 +132,14 @@ def str_to_list(df):
     df['genres'] = df['genres'].str.split(',')
     
     return df
+
+################# Data Splitting Function################################################
+
+def split_my_data(df):
+    '''Splits full dataframe into train, validate, and test dataframes'''
+
+    train_validate, test = train_test_split(df, test_size=.2, random_state=123)
+
+    train, validate =  train_test_split(train_validate, test_size=.3, random_state=123)
+
+    return train, validate, test
