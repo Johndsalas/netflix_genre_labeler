@@ -33,6 +33,10 @@ def get_majoriety_counts(train):
 
     non_comedy_train = train[train.comedy == False]
     
+    comedy_len = len(comedy_train)
+
+    non_comedy_len = len(non_comedy_train)
+
     for word in train_set_of_words:
 
         # get count of comedy films that have word in them
@@ -58,7 +62,8 @@ def get_majoriety_counts(train):
         w_total = c_w_count - n_w_count
         
         d_total = c_d_count - n_d_count
-        
+
+    
         # append difference
         
         freq_doc[f'{word}'] = d_total
@@ -68,6 +73,12 @@ def get_majoriety_counts(train):
         freq_count[f'{word}'] = w_total
         
         list_freq_count.append(w_total)
+
+    # order dictionaries by value number
+
+    freq_doc = sorted(freq_doc.items(), key = lambda x : x[1])
+
+    freq_count = sorted(freq_count.items(), key = lambda x : x[1])
         
     return freq_doc, freq_count, list_freq_doc, list_freq_count
 
@@ -222,12 +233,27 @@ def omni_pie(panda_series,title = "Super Awsome Title I'll Think of Latter"):
     plt.show()
 
 
-def get_hist(li):
+def get_hist_word(li):
     
     plt.figure(figsize=(20, 5))
-
     plt.xlim(-50,50)
+    
+    plt.title("Relative form a large piller of Data Centering Slightly Negative")
+    plt.xlabel("Relative Word frequecy")
+    plt.ylabel("Number of Unique Words")
+    plt.hist(li, bins = 1000)
 
-    plt.hist(li, bins = 500)
+    plt.show()
+
+
+def get_hist_doc(li):
+    
+    plt.figure(figsize=(20, 5))
+    plt.xlim(-50,50)
+    
+    plt.title("Relative Document Frequency of Most Words Normalizes Around Zero")
+    plt.xlabel("Relative Document frequecy")
+    plt.ylabel("Number of Unique Words")
+    plt.hist(li, bins = 1000)
 
     plt.show()
