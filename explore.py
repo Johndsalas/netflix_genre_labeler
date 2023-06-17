@@ -33,10 +33,6 @@ def get_majoriety_counts(train):
 
     non_comedy_train = train[train.comedy == False]
     
-    comedy_len = len(comedy_train)
-
-    non_comedy_len = len(non_comedy_train)
-
     for word in train_set_of_words:
 
         # get count of comedy films that have word in them
@@ -57,7 +53,7 @@ def get_majoriety_counts(train):
         
         n_d_count = non_comedy_train['non_doc'].sum()
         
-        # subtract number of non-comedy films from number of comedy films
+        # subtract number of non-comedy words/films from number of comedy words/films
         
         w_total = c_w_count - n_w_count
         
@@ -81,17 +77,6 @@ def get_majoriety_counts(train):
     freq_count = sorted(freq_count.items(), key = lambda x : x[1])
         
     return freq_doc, freq_count, list_freq_doc, list_freq_count
-
-
-
-
-
-
-
-
-
-
-
 
 ####################################### Visualizations ###########################################################
 
@@ -236,12 +221,12 @@ def omni_pie(panda_series,title = "Super Awsome Title I'll Think of Latter"):
 def get_hist_word(li):
     
     plt.figure(figsize=(20, 5))
-    plt.xlim(-50,50)
+    plt.xlim(-30,30)
     
-    plt.title("Relative form a large piller of Data Centering Slightly Negative")
+    plt.title("Relative Word Count Normalizes around Zero Suggesting there is a Lot of Noise to be Removed")
     plt.xlabel("Relative Word frequecy")
     plt.ylabel("Number of Unique Words")
-    plt.hist(li, bins = 1000)
+    plt.hist(li, bins = 100)
 
     plt.show()
 
@@ -249,11 +234,26 @@ def get_hist_word(li):
 def get_hist_doc(li):
     
     plt.figure(figsize=(20, 5))
-    plt.xlim(-50,50)
+    plt.xlim(-30,30)
     
-    plt.title("Relative Document Frequency of Most Words Normalizes Around Zero")
+    plt.title("Relative Document Frequency Normalizes around Zero Suggesting there is a Lot of Noise to be Removed")
     plt.xlabel("Relative Document frequecy")
     plt.ylabel("Number of Unique Words")
-    plt.hist(li, bins = 1000)
+    plt.hist(li, bins = 100)
+
+    plt.show()
+
+
+def get_doc_ext(data, title):
+
+    # Extract labels and values from the dictionaries
+    labels = list(data.keys())
+    values = list(data.values())
+
+    # Plot the chart
+    plt.barh(labels, values)
+    plt.xlabel('Value')
+    plt.ylabel('Label')
+    plt.title(f'{title}')
 
     plt.show()
