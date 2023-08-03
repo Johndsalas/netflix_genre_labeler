@@ -25,8 +25,8 @@ def get_show_data():
 
     df = df[['description', 'genres']]
 
-    # drop rows with empty genres
-    df = df[df.genres != '[]']
+    # drop rows where genre is empty or is western
+    df = df[(df.genres != '[]') & (df.genres != 'western')]
 
     # convert strings in descriptions to lists
     df = str_to_list(df)

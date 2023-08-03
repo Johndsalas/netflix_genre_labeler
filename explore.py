@@ -7,13 +7,46 @@ import matplotlib.pyplot as plt
 def get_gens(df):
     '''get set of unique genres'''
 
-    gens = df[['genres']].explode('genres')
+    return set(df[['genres']].explode('genres').to_list())
 
-    gen_set = set(gens.genres.to_list())
+def get_train_set_of_words(df):
+    '''get set of unique words in descriptions'''
 
-    gen_set.remove('western')
+    return set(df['description'].apply(lambda value : value.split(' '))
+                                .explode('description')
+                                .to_list())
 
-    return gen_set
+def get_count_of_words(df, word, drop_col = True):
+    ''' take in a dataframe and a word 
+        return total number of times that the word appears 
+        in values in the description column of that dataframe'''
+
+    df['word_count'] = df['description'].apply(lambda value: value.count(word))
+
+    word_count = df.word_count.sum()
+
+    if drop_col == True:
+    
+        df = df.drop(columns=['word_count'])
+
+    return word_count
+
+def get_count_of_docs(df, word):
+    ''' take in a dataframe and a word 
+        return total number of in values 
+        in the description column of that dataframe
+        containing that value'''
+    
+    df['word_count'] = df['description'].apply(lambda value: value.count(word))
+
+    df['doc_count'] = df['description'] > 0
+
+    doc_count = df.doc_count.sum()
+
+    df = df.drop(columns=['wrod_count', 'doc_count'])
+
+    return doc_count
+
 
 def get_majoriety_counts(train):
     
@@ -23,18 +56,16 @@ def get_majoriety_counts(train):
     list_freq_doc = []
     list_freq_count = []
     
-    train_set_of_words = set(train['description'].apply(lambda value : value.split(' '))
-                                                 .explode('description')
-                                                 .to_list())
+    train_set_of_words = get_train_set_of_words(train)
     
-    comedy_train = train[train.comedy == True]
+    comedy_train = get_train_set_of_words(train[train.comedy == True])
 
-    non_comedy_train = train[train.comedy == False]
+    non_comedy_train = get_train_set_of_words(train[train.comedy == False])
     
     for word in train_set_of_words:
 
         # get count of comedy films that have word in them
-        comedy_train['com_count'] = comedy_train['description'].apply(lambda words: words.count(word))
+        comedy_train['com_count'] = 
         
         comedy_train['com_doc'] = comedy_train['com_count'] > 0
         
