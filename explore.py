@@ -1,14 +1,12 @@
 ''' Contains functions for exploring Netflix shows data'''
 
 import pandas as pd
-import numpy as np
-
 import matplotlib.pyplot as plt
-import seaborn as sns
+
 
 def get_gens(df):
+    '''get set of unique genres'''
 
-    # get set of unique genres
     gens = df[['genres']].explode('genres')
 
     gen_set = set(gens.genres.to_list())
@@ -77,6 +75,14 @@ def get_majoriety_counts(train):
     freq_count = sorted(freq_count.items(), key = lambda x : x[1])
         
     return freq_doc, freq_count, list_freq_doc, list_freq_count
+
+
+
+
+
+
+
+
 
 ####################################### Visualizations ###########################################################
 
