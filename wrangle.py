@@ -1,12 +1,12 @@
 ''' Code for acquiering and preparing data '''
 
 import pandas as pd
-import numpy as np
+# import numpy as np
 
-import matplotlib.pyplot as plt
-import seaborn as sns
-import os
-import re
+# import matplotlib.pyplot as plt
+# import seaborn as sns
+# import os
+import regex as re
 
 import unicodedata
 import nltk
@@ -21,6 +21,7 @@ def get_show_data():
 
     '''Acquiers and preps Netflix data'''
     # get dataframe of descriptions and genres 
+
     df = pd.read_csv('titles.csv')
 
     df = df[['description', 'genres']]
@@ -75,10 +76,10 @@ def prep_description(df):
     df = get_disc_tokens(df)
 
     # lemmatize the text in description
-    df['description'] = df['description'].apply(lambda value: lemmatizer(value))
+    df['description'] = df['description'].apply(lemmatizer)
 
     # remove stopwords and words with less than three letters from text in description and return a list of words in the text
-    df['description'] = df['description'].apply(lambda value: remove_stopwords(value))
+    df['description'] = df['description'].apply(remove_stopwords)
 
     return df
 
@@ -86,7 +87,7 @@ def prep_description(df):
 
 def get_disc_tokens(df):
     
-    tokenizer = nltk.tokenize.ToktokTokenizer()
+    tokenizer = ToktokTokenizer()
 
     # tokenize text in description
     df['description'] = df['description'].apply(lambda value: tokenizer.tokenize(value, return_str=True))
