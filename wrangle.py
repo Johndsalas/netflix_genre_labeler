@@ -25,8 +25,8 @@ def get_show_data():
 
     df = df[['description', 'genres']]
 
-    # drop rows where genre is empty or is western
-    df = df[(df.genres != '[]') & (df.genres != 'western')]
+    # drop rows where genre is empty
+    df = df[(df.genres != '[]')]
 
     # convert strings in descriptions to lists
     df = str_to_list(df)
@@ -48,8 +48,6 @@ def get_genre_columns(df):
     gens = df[['genres']].explode('genres')
 
     gen_set = set(gens.genres.to_list())
-
-    gen_set.remove('western')
 
     # for each unique genre add a column genre_name displaying if the show is in that genre
     for gen in gen_set:

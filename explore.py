@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 def get_gens(df):
     '''get set of unique genres'''
 
-    return set(df[['genres']].explode('genres').to_list())
+    return set(df['genres'].explode('genres').to_list())
 
 def get_train_set_of_words(df):
     '''get set of unique words in descriptions'''
@@ -16,7 +16,7 @@ def get_train_set_of_words(df):
                                 .explode('description')
                                 .to_list())
 
-def get_count_of_words(df, word, drop_col = True):
+def get_count_of_words(df, word):
     ''' take in a dataframe and a word 
         return total number of times that the word appears 
         in values in the description column of that dataframe'''
@@ -25,9 +25,7 @@ def get_count_of_words(df, word, drop_col = True):
 
     word_count = df.word_count.sum()
 
-    if drop_col == True:
-    
-        df = df.drop(columns=['word_count'])
+    df = df.drop(columns=['word_count'])
 
     return word_count
 
@@ -39,83 +37,95 @@ def get_count_of_docs(df, word):
     
     df['word_count'] = df['description'].apply(lambda value: value.count(word))
 
-    df['doc_count'] = df['description'] > 0
+    df['doc_count'] = df['word_count'] > 0
 
     doc_count = df.doc_count.sum()
 
-    df = df.drop(columns=['wrod_count', 'doc_count'])
+    df = df.drop(columns=['word_count', 'doc_count'])
 
     return doc_count
 
 
-def get_majoriety_counts(train):
-    
-    freq_doc = {}
-    freq_count = {}
+def get_word_freq(train):
+    ''' takes in training data
+        returns a dictionary of each word in the training set
+        and its relative frequency of apearances in comedy and non-comedy descriptions'''
 
-    list_freq_doc = []
-    list_freq_count = []
-    
+    word_freq = {}
+
+    # get set of unique words in training data
     train_set_of_words = get_train_set_of_words(train)
-    
-    comedy_train = get_train_set_of_words(train[train.comedy == True])
 
-    non_comedy_train = get_train_set_of_words(train[train.comedy == False])
-    
+    com_train = train[train.comedy == True]
+
+    non_train = train[train.comedy == False]
+
     for word in train_set_of_words:
 
-        # get count of comedy films that have word in them
-        comedy_train['com_count'] = 
-        
-        comedy_train['com_doc'] = comedy_train['com_count'] > 0
-        
-        c_w_count = comedy_train['com_count'].sum()
-        
-        c_d_count = comedy_train['com_doc'].sum()
-        
-        # get count of non-comedy films that have word in them
-        non_comedy_train['non_count'] = non_comedy_train['description'].apply(lambda words: words.count(word))
-        
-        non_comedy_train['non_doc'] = non_comedy_train['non_count'] > 0
-        
-        n_w_count = non_comedy_train['non_count'].sum()
-        
-        n_d_count = non_comedy_train['non_doc'].sum()
-        
-        # subtract number of non-comedy words/films from number of comedy words/films
-        
-        w_total = c_w_count - n_w_count
-        
-        d_total = c_d_count - n_d_count
+        # get number of times a word appears in description column values of comedies
+        com_words = get_count_of_words(com_train, word)
 
+        # get number of times a word appears in description column values
+        non_words = get_count_of_words(non_train, word)
+
+        # subtract number of comedy words from non comedy words
+        word_total = com_words - non_words
+
+        # add word and total to dictionary
+        word_freq[f'{word}'] = word_total
+
+    # order convert to list and order by number
+    word_freq = sorted(word_freq.items(), key = lambda x : x[1])
+
+    return word_freq
+
+
+def get_doc_freq(train):
+    ''' takes in training data
+        returns a dictionary of each word in the training set
+        and its relative frequency of apearances in comedy and non-comedy descriptions'''
+
+    doc_freq = {}
+
+    # get set of unique words in training data
+    train_set_of_words = get_train_set_of_words(train)
+
+    com_train = train[train.comedy == True]
+
+    non_train = train[train.comedy == False]
+
+    for word in train_set_of_words:
+
+        # get number of comedy documents in description containing the word
+        com_docs = get_count_of_docs(com_train, word)
+
+        # get number of non documents in description containing the word
+        non_docs = get_count_of_docs(non_train, word)
+
+        # get difference in documents
+        doc_total = com_docs - non_docs
+
+        # add word and total to dictionary
+        doc_freq[f'{word}'] = doc_total
+
+    # convert to list and order by number
+    doc_freq = sorted(doc_freq.items(), key = lambda x : x[1])
     
-        # append difference
-        
-        freq_doc[f'{word}'] = d_total
-        
-        list_freq_doc.append(d_total)
-        
-        freq_count[f'{word}'] = w_total
-        
-        list_freq_count.append(w_total)
-
-    # order dictionaries by value number
-
-    freq_doc = sorted(freq_doc.items(), key = lambda x : x[1])
-
-    freq_count = sorted(freq_count.items(), key = lambda x : x[1])
-        
-    return freq_doc, freq_count, list_freq_doc, list_freq_count
+    return doc_freq
 
 
+def get_counts(lst):
+    ''' makes a list from the second item of paired items from a list '''
 
+    counts =[]
 
+    for item in lst:
 
+        counts.append(item[1])
 
+    return counts
 
-
-
-####################################### Visualizations ###########################################################
+############################################################## Visualizations #############################################################################
 
 def shows_per_gen(df, gen_set):
 

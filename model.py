@@ -1,14 +1,13 @@
 '''                                                                 File for holding model functions                                                           '''
 
 import pandas as pd
-import regex as re
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 
-def get_counts(train_X, validate_X, test_X):
+def get_vector_counts(train_X, validate_X, test_X):
     ''' Take in X values for train, validate and test
         Return values vectorized by count'''
 
