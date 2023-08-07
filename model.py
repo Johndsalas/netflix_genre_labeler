@@ -39,8 +39,8 @@ def get_acc_table(train_X, train_y, validate_X, validate_y):
     
     label_lst = ["Decision Tree ",
                  "Random Forest ",
-                 "KNeighbors ",
-                 "Logistic "]
+                 "K Neighbors ",
+                 "Logistic Regression"]
     
     index = 0
 
@@ -55,6 +55,6 @@ def get_acc_table(train_X, train_y, validate_X, validate_y):
         train_score = obj.score(train_X, train_y)
         validate_score = obj.score(validate_X, validate_y)
 
-        print(f'{label} Train: {train_score} Validate: {validate_score}')
+        print(f'{label} Train: {round(train_score, 4) * 100}% Validate: {round(validate_score,4) *100}%')
 
         index += 1
