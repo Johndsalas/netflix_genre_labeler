@@ -9,7 +9,7 @@ def get_gens(df):
 
     return set(df['genres'].explode('genres').to_list())
 
-def get_train_set_of_words(df):
+def get_description_set_of_words(df):
     '''get set of unique words in descriptions'''
 
     return set(df['description'].apply(lambda value : value.split(' '))
@@ -54,7 +54,7 @@ def get_word_freq(train):
     word_freq = {}
 
     # get set of unique words in training data
-    train_set_of_words = get_train_set_of_words(train)
+    train_set_of_words = get_description_set_of_words(train)
 
     com_train = train[train.comedy == True]
 
@@ -88,7 +88,7 @@ def get_doc_freq(train):
     doc_freq = {}
 
     # get set of unique words in training data
-    train_set_of_words = get_train_set_of_words(train)
+    train_set_of_words = get_description_set_of_words(train)
 
     com_train = train[train.comedy == True]
 
