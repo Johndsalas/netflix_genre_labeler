@@ -243,11 +243,6 @@ def get_bar(df, title ):
     plt.show()
 
 
-
-
-
-
-
 def omni_pie(panda_series,title = "Super Awsome Title I'll Think of Latter"):
 
     labels = set(value for value in panda_series)
@@ -260,30 +255,21 @@ def omni_pie(panda_series,title = "Super Awsome Title I'll Think of Latter"):
     plt.show()
 
 
-def get_hist_word(li):
+def get_hist(li, title, X_label):
     
-    plt.figure(figsize=(20, 5))
-    plt.xlim(-30,30)
+    plt.figure(figsize=(15, 5))
+    plt.xlim(-30, 30)
     
-    plt.title("Relative Word Count Normalizes around Zero Suggesting there is a Lot of Noise to be Removed")
-    plt.xlabel("Relative Word frequecy")
+    plt.title(f"{title}")
+    plt.xlabel(f"{X_label}")
     plt.ylabel("Number of Unique Words")
-    plt.hist(li, bins = 100)
-
+    plt.hist(li, bins=100)
+    
+    # Change x-axis tick marks to every 5 units
+    plt.xticks(range(-30, 31, 5))
+    
     plt.show()
 
-
-def get_hist_doc(li):
-    
-    plt.figure(figsize=(20, 5))
-    plt.xlim(-30,30)
-    
-    plt.title("Relative Document Frequency Normalizes around Zero Suggesting there is a Lot of Noise to be Removed")
-    plt.xlabel("Relative Document frequecy")
-    plt.ylabel("Number of Unique Words")
-    plt.hist(li, bins = 100)
-
-    plt.show()
 
 
 def get_doc_ext(data, title):
@@ -300,7 +286,35 @@ def get_doc_ext(data, title):
 
     plt.show()
 
+def display_ext_values(data1, title1, data2, title2, x_label, y_label, scale):
 
+    # Extract labels and values from the dictionaries
+    labels1 = list(data1.keys())
+    values1 = list(data1.values())
+
+    labels2 = list(data2.keys())
+    values2 = list(data2.values())
+
+    # Create a figure with two subplots
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+
+    # Plot the first chart
+    ax1.barh(labels1, values1)
+    ax1.set_xlabel(f'{x_label}')
+    ax1.set_ylabel(f'{y_label}')
+    ax1.set_title(title1)
+    ax1.set_xlim(scale * -1, 0)
+
+    # Plot the second chart
+    ax2.barh(labels2, values2)
+    ax2.set_xlabel(f'{x_label}')
+    ax2.set_ylabel(f'{y_label}')
+    ax2.set_title(title2)
+    ax2.set_xlim(0, scale)
+
+    # Adjust layout and display the plots
+    plt.tight_layout()
+    plt.show()
 
 
 
