@@ -74,7 +74,7 @@ def get_word_freq(train):
         # add word and total to dictionary
         word_freq[f'{word}'] = word_total
 
-    # order convert to list and order by number
+    # convert to list and order by number
     word_freq = sorted(word_freq.items(), key = lambda x : x[1])
 
     return word_freq
@@ -127,130 +127,125 @@ def get_counts(lst):
 
 ############################################################## Visualizations #############################################################################
 
-def shows_per_gen(df, gen_set):
-
-    # get pairs of gens and number of rows
+def get_shows_per_gen(df, gen_set):
+    '''Takes in a dataframe and a set of genres
+       Returns a dataframe containing each genre and number of rows in input dataframe containing that genre'''
+    
     gens = []
     nums = []
 
+    # for each genre add its name and the number of rows in the dataframe containing that genre to seperate lists
     for gen in gen_set:
         
         gens.append(gen)
         
         nums.append(len(df[df[f'{gen}'] == True]))
         
-    sort = pd.DataFrame(dict(
+    # combine the two rows into a dictionary and create a dataframe
+    df = pd.DataFrame(dict(
                             gens = gens,
                             nums = nums))
 
-    sort = sort.sort_values('nums')
+    # sort by number values
+    df = df.sort_values('nums')
 
-    plt.figure(figsize=(18,10))
-
-
-    plt.bar('gens', 'nums', data=sort, color='lightblue')
+    return df
 
 
-    plt.title("Number of Shows Representing Each Genre")
-    plt.tight_layout()
+def get_unique_words_per_gen(df, gen_set):
+    '''Takes in a data frame and a list of genres 
+       Returns a dataframs containing the number of differint unique words in each genre'''
+    gens = []
+    nums = []
+
+    # for each genre add its name and the number of unique words belonging to that genre to seperate lists    
+    for gen in gen_set:
+
+        true_set = get_description_set_of_words(df[df[f'{gen}'] == True])
+        false_set = get_description_set_of_words(df[df[f'{gen}'] == False])
+
+        diff_set = true_set - false_set
+        
+        gens.append(gen)
+        
+        nums.append(len(diff_set))
+    
+    # create a dataframe from the lists and sort the dataframe by the number column
+    df = pd.DataFrame(dict(gens = gens,
+                           nums = nums))
+
+    df = df.sort_values('nums')
+
+    return df
 
 
-    plt.show()
-
-
-def unique_words_per_gen(df, gen_set):
-
+def get_unique_word_appearance_per_genre(df, gen_set):
+     
     gens = []
     nums = []
 
     for gen in gen_set:
 
-        t_bow = ''
-        f_bow = ''
+        true_set = get_description_set_of_words(df[df[f'{gen}'] == True])
+        false_set = get_description_set_of_words(df[df[f'{gen}'] == False])
 
-        for value in df.description[df[f'{gen}'] == True]:
-
-            t_bow += value
-
-            t_bow += ' '
-
-        for value in df.description[df[f'{gen}'] == False]:
-
-            f_bow += value
-
-            f_bow += ' '
-
-        t_sow = set(t_bow.split(' '))
-        f_sow = set(f_bow.split(' '))
-
-        d_sow = t_sow - f_sow
+        unique_to_genre_set = true_set - false_set
         
+        df['num_uniques'] = df['description'].apply(lambda value: get_num_uniques(value, unique_to_genre_set))
+
+        unique_word_appearances = df.num_uniques.sum()
+
+        rows_in_genre = len(df[df[f'{gen}'] == True])
+
         gens.append(gen)
-        
-        nums.append(len(d_sow))
-        
-    sort = pd.DataFrame(dict(
-                            gens = gens,
-                            nums = nums))
 
-    sort = sort.sort_values('nums')
+        nums.append(unique_word_appearances / rows_in_genre)
+
+    # create a dataframe from the lists and sort the dataframe by the number column
+    df = pd.DataFrame(dict(gens = gens,
+                           nums = nums))
+
+    df = df.sort_values('nums')
+
+    return df
+
+
+def get_num_uniques(value, u_set):
+
+    count = 0
+
+    value_list = value.split(' ')
+
+    for value in value_list:
+
+        if value in u_set:
+
+            count += 1
+
+    return count
+
+
+
+
+
+
+
+
+
+def get_bar(df, title ):
+    '''Display barplot for df containing number of shows in each genre'''
 
     plt.figure(figsize=(20,10))
+    plt.bar('gens', 'nums', data=df, color='lightblue')
+    plt.title(f"{title}")
 
-
-    plt.bar('gens', 'nums', data=sort, color='lightblue')
-
-    plt.title("Number of Unique Words in Each Genre")
     plt.tight_layout()
     plt.show()
 
-def unique_words_frequency(df, gen_set):
-
-    gens = []
-    nums = []
-
-    for gen in gen_set:
-
-        t_bow = ''
-        f_bow = ''
-
-        for value in df.description[df[f'{gen}'] == True]:
-
-            t_bow += value
-
-            t_bow += ' '
-
-        for value in df.description[df[f'{gen}'] == False]:
-
-            f_bow += value
-
-            f_bow += ' '
-
-        t_sow = set(t_bow.split(' '))
-        f_sow = set(f_bow.split(' '))
-
-        d_sow = t_sow - f_sow
-        
-        gens.append(gen)
-        
-        nums.append(len(d_sow)/len(df[df[f'{gen}'] == True]))
-        
-        
-    sort = pd.DataFrame(dict(
-                            gens = gens,
-                            nums = nums))
-
-    sort = sort.sort_values('nums')
-
-    plt.figure(figsize=(20,10))
 
 
-    plt.bar('gens', 'nums', data=sort, color='lightblue')
 
 
-    plt.title("On Average Each Show Description Contains Between 2-4 Unique Words")
-    plt.tight_layout()
-    plt.show()
 
 
 def omni_pie(panda_series,title = "Super Awsome Title I'll Think of Latter"):
@@ -304,3 +299,66 @@ def get_doc_ext(data, title):
     plt.title(f'{title}')
 
     plt.show()
+
+
+
+
+
+    # def unique_words_frequency(df, gen_set):
+
+
+#     # get df of each genre and number of differint unique words
+#     num_unique_df = unique_words_per_gen(df, gen_set)
+
+
+#     for genre in gen_set:
+
+#         num_unique = num_unique_df[f'{genre}']
+
+#         total_docs = df[f'{genre}' == True]
+
+#         num_
+
+
+
+
+
+#     gens = []
+#     nums = []
+
+#     for gen in gen_set:
+
+#         true_set = get_all_unique_words( df.description[df[f'{gen}'] == True])
+#         false_set = get_all_unique_words( df.description[df[f'{gen}'] == False])
+
+#         diff_set = true_set - false_set
+        
+#         gens.append(gen)
+        
+#         nums.append(len(diff_set))
+
+#         t_sow = set(t_bow.split(' '))
+#         f_sow = set(f_bow.split(' '))
+
+#         d_sow = t_sow - f_sow
+        
+#         gens.append(gen)
+        
+#         nums.append(len(d_sow)/len(df[df[f'{gen}'] == True]))
+        
+        
+#     sort = pd.DataFrame(dict(
+#                             gens = gens,
+#                             nums = nums))
+
+#     sort = sort.sort_values('nums')
+
+#     plt.figure(figsize=(20,10))
+
+
+#     plt.bar('gens', 'nums', data=sort, color='lightblue')
+
+
+#     plt.title("On Average Each Show Description Contains Between 2-4 Unique Words")
+#     plt.tight_layout()
+#     plt.show()
