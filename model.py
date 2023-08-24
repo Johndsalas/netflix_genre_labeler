@@ -1,4 +1,4 @@
-'''                                                                 File for holding model functions                                                           '''
+'''                                                                 File for holding prediction and model functions                                                           '''
 
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
@@ -150,8 +150,8 @@ def get_vector_counts(train_X, validate_X, test_X):
 
     return train_counts, validate_counts, test_counts
 
-def get_acc_table(train_X, train_y, validate_X, validate_y):
 
+def get_acc_table(train_X, train_y, validate_X, validate_y):
     ''' take in train data split into X and y, Validate data split into X and y
         print table of accuracy scores for train and validate data when run on each classifier in the list'''
 
@@ -181,3 +181,26 @@ def get_acc_table(train_X, train_y, validate_X, validate_y):
         print(f'{label} Train: {round(train_score, 4) * 100}% Validate: {round(validate_score,4) *100}%')
 
         index += 1
+
+
+def remove_low_freq(df, freq_dict, threshold):
+    ''' removes columns from df if abs val of relative freq is equal or less than input number '''
+    
+    for col in df.columns.to_list():
+        
+        if abs(freq_dict[col]) <= threshold:
+            
+            df = df.drop(columns=[col])
+    
+    return df
+
+
+def get_acc_after_freq_drop(train_X, train_y, validate_X, validate_y, freq_lst, threshold):
+    ''' get accuracy table after dropping words from training data 
+        that have a relative freq less than the input number'''
+    
+    train_X = remove_low_freq(train_X, dict(freq_lst), threshold)
+    validate_X = remove_low_freq(validate_X, dict(freq_lst), threshold)
+
+    print(f"Drop threshold is {threshold}")
+    get_acc_table(train_X, train_y, validate_X, validate_y)
