@@ -37,7 +37,7 @@ def is_present_value(value, gen_set, non_gen_set):
     
     else:
         
-        return "contains niether";
+        return "contains niether"
     
 
 def by_number_value(value, gen_set, non_gen_set):
@@ -130,6 +130,26 @@ def get_predictions_number(df, gen_uniques, non_gen_uniques):
 ######################################################################### Functions for Modeling ####################################################################################
 
 
+def get_vectorized_data(train_X, validate_X, test_X, vector):
+    ''' Take in X values for train, validate and test
+        Return values vectorized by count'''
+
+    cv = vector
+
+    train_X = cv.fit_transform(train_X['description'])
+    validate_X = cv.transform(validate_X['description'])
+    test_X = cv.transform(test_X['description'])
+
+    # Retrieve the feature names (words) from the Vectorizer
+    feature_names = cv.get_feature_names()
+
+    # Create DataFrames for train_counts and validate_counts
+    train_X = pd.DataFrame(train_X.todense(), columns=feature_names)
+    validate_X = pd.DataFrame(validate_X.todense(), columns=feature_names)
+    test_X = pd.DataFrame(test_X.todense(), columns=feature_names)
+
+    return train_X, validate_X, test_X
+
 def get_vector_counts(train_X, validate_X, test_X):
     ''' Take in X values for train, validate and test
         Return values vectorized by count'''
@@ -202,5 +222,6 @@ def get_acc_after_freq_drop(train_X, train_y, validate_X, validate_y, freq_lst, 
     train_X = remove_low_freq(train_X, dict(freq_lst), threshold)
     validate_X = remove_low_freq(validate_X, dict(freq_lst), threshold)
 
+    print()
     print(f"Drop threshold is {threshold}")
     get_acc_table(train_X, train_y, validate_X, validate_y)
