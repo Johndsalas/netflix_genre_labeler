@@ -72,10 +72,10 @@ The solution I came up with was to build a model that could predict whether a fi
 
 # Steps to Reproduce
 
-Clone this repo
-Download the data from Kaggle as a .csv (add link latter)
-Put the data in the file containing the cloned repo
-Run notebook
+* Clone this repo
+* Download the data from Kaggle as a .csv (add link latter)
+* Put the data in the file containing the cloned repo
+* Run notebook
 
 # Process Summary
 
