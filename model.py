@@ -78,16 +78,19 @@ def by_number_value(value, gen_set, non_gen_set):
     
     else:
         
-        return "did not catch";
+        return "did not catch"
     
     
 def get_predictions_presence(df, gen_uniques, non_gen_uniques):
-    '''Takes in df containing film description set of in-genre words and set of out of genre words'''
+    '''Takes in df containing film description set of in-genre words and set of out of genre words
+       Predicts if the film is comedy or not in genre based on presents of unique words
+       Prints accuracy chart evaluating those predictions'''
     
     # create prediction column for dataframe predicting comedy based on presence of unique words 
     df['prediction'] = df.description.apply(lambda value : is_present_value(value, gen_uniques, non_gen_uniques)) 
     df['evaluation'] = df['comedy'] == df['prediction']
     
+    # print chart evaluating predictions
     print("Prediction Value Counts")
     print("-----------------------")
     print(df.prediction.value_counts())
@@ -106,10 +109,15 @@ def get_predictions_presence(df, gen_uniques, non_gen_uniques):
     
 
 def get_predictions_number(df, gen_uniques, non_gen_uniques):
-    
+    '''Takes in df containing film description set of in-genre words and set of out of genre words
+       Predicts if the film is in-genre or not in genre based on number of unique words
+       Prints accuracy chart evaluating those predictions'''
+
+    # create prediction column for dataframe predicting comedy based on number of unique words 
     df['prediction'] = df.description.apply(lambda value : by_number_value(value, gen_uniques, non_gen_uniques)) 
     df['evaluation'] = df['comedy'] == df['prediction']
     
+    # print chart evaluating predictions
     print("Prediction Value Counts")
     print("-----------------------")
     print(df.prediction.value_counts())
@@ -127,12 +135,12 @@ def get_predictions_number(df, gen_uniques, non_gen_uniques):
     print(round(df.evaluation[(df.prediction == True) | (df.prediction == False)].mean(), 2) * 100)
 
 
-######################################################################### Functions for Modeling ####################################################################################
+############################################################################# Modeling Functions ####################################################################################
 
 
 def get_vectorized_data(train_X, validate_X, test_X, vector):
     ''' Take in X values for train, validate and test
-        Return values vectorized by count'''
+        Return values vectorized by specified vectorization method'''
 
     cv = vector
 
@@ -150,31 +158,12 @@ def get_vectorized_data(train_X, validate_X, test_X, vector):
 
     return train_X, validate_X, test_X
 
-def get_vector_counts(train_X, validate_X, test_X):
-    ''' Take in X values for train, validate and test
-        Return values vectorized by count'''
-
-    cv = CountVectorizer()
-
-    train_counts = cv.fit_transform(train_X['description'])
-    validate_counts = cv.transform(validate_X['description'])
-    test_counts = cv.transform(test_X['description'])
-
-    # Retrieve the feature names (words) from the CountVectorizer
-    feature_names = cv.get_feature_names()
-
-    # Create DataFrames for train_counts and validate_counts
-    train_counts = pd.DataFrame(train_counts.todense(), columns=feature_names)
-    validate_counts = pd.DataFrame(validate_counts.todense(), columns=feature_names)
-    test_counts = pd.DataFrame(test_counts.todense(), columns=feature_names)
-
-    return train_counts, validate_counts, test_counts
-
 
 def get_acc_table(train_X, train_y, validate_X, validate_y):
     ''' take in train data split into X and y, Validate data split into X and y
         print table of accuracy scores for train and validate data when run on each classifier in the list'''
 
+    # List of classifiers and labels
     clf_lst = [DecisionTreeClassifier(random_state = 411),
                RandomForestClassifier(random_state = 411),
                KNeighborsClassifier(),
@@ -187,9 +176,12 @@ def get_acc_table(train_X, train_y, validate_X, validate_y):
     
     index = 0
 
+    # print beginning of table
     print('Accuracy Scores')
     print('---------------')
 
+    # Itterate through classifiers and evaluate each on train and validate 
+    # Then print results in a table 
     for clf in clf_lst:
 
         label = label_lst[index]
@@ -225,3 +217,20 @@ def get_acc_after_freq_drop(train_X, train_y, validate_X, validate_y, freq_lst, 
     print()
     print(f"Drop threshold is {threshold}")
     get_acc_table(train_X, train_y, validate_X, validate_y)
+
+
+def get_test_eval(word_freq, train_counts, train_y, test_counts, test_y):
+    '''Gets evaluation of test data'''
+    
+    # Removing low relative frequency features
+    train_counts = remove_low_freq(train_counts, word_freq, 0)
+    test_counts = remove_low_freq(test_counts, word_freq, 0)
+
+    # creating and fiting test object
+    obj = LogisticRegression(random_state = 411)
+    obj.fit(train_counts, train_y)
+
+    # evaluating on test
+    test_score = obj.score(test_counts, test_y)
+
+    print(f'The top model predicts with {round(test_score, 4) * 100}% accuracy on test data')

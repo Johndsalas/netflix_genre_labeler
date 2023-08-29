@@ -141,7 +141,7 @@ def str_to_list(df):
     
     return df
 
-################# Data Splitting Function################################################
+######################################################################### Data Splitting Function #####################################################################
 
 def split_my_data(df):
     '''Splits full dataframe into train, validate, and test dataframes'''
