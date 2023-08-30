@@ -7,7 +7,7 @@ Streaming services such as Netflix and Hulu are regularly in need of updating th
 # Initial Thoughts
 Upon viewing the data I encountered a problem. Films were not classified as one genre or another exclusively. In fact most of the films were classified as a list of genres. While this makes sense, a film can easily fall under more than one genre. It means that I will not be able to use genre as my target variable.
 
-The solution I came up with was to build a model that could predict whether a film was or was not a given genre. If an accurate model cold be developed for one genre it is likely that the model building method could be generalized to creating a predictive model for each genre. Each model could then be run on the data to create a comprehinsive list of all of the genres that a given film is a part of
+The solution I came up with was to build a model that could predict whether a film was or was not a given genre. If an accurate model could be developed for one genre it is likely that the model building method could be generalized to creating a predictive model for each genre. Each model could then be run on the data to create a comprehinsive list of all of the genres that a given film is a part of
 
 # Goal:
 
