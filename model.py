@@ -195,16 +195,15 @@ def get_acc_table(train_X, train_y, validate_X, validate_y):
         index += 1
 
 
-def remove_low_freq(df, freq_dict, threshold):
-    ''' removes columns from df if abs val of relative freq is equal or less than input number '''
+def remove_low_freq(df_X, freq_dict, threshold):
+    ''' Restricts columns in vectorized df to those that have an relative frequency grater than threshold numbers from zero'''
     
-    for col in df.columns.to_list():
-        
-        if abs(freq_dict[col]) <= threshold:
-            
-            df = df.drop(columns=[col])
-    
-    return df
+    df_cols = list(df_X.columns)
+
+    new_cols = [col for col in df_cols if abs(freq_dict[col]) > threshold]
+ 
+    return df_X[new_cols]
+  
 
 
 def get_acc_after_freq_drop(train_X, train_y, validate_X, validate_y, freq_lst, threshold):

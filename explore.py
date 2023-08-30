@@ -231,9 +231,11 @@ def get_num_uniques(value, u_set):
 
 
 def get_bar(df, title):
-    '''Display barplot for df containing number of shows in each genre'''
+    '''Display barplot for top 5 rows of df'''
 
-    plt.figure(figsize=(20,10))
+    df = df.tail()
+
+    #plt.figure(figsize=(20,10))
     plt.bar('gens', 'nums', data=df, color='lightblue')
     plt.title(f"{title}")
 
@@ -262,11 +264,11 @@ def get_hist(li, title, X_label):
     plt.title(f"{title}")
     plt.xlabel(f"{X_label}")
     plt.ylabel("Number of Unique Words")
-    plt.hist(li, bins=100)
+    plt.hist(li, bins=range(-30, 31, 5), color='lightblue')
     
     plt.xticks(range(-30, 31, 5))
     
-    plt.show()
+    plt.show
 
 def get_doc_ext(data, title):
     ''' Create bar chart from input dictionary'''
@@ -296,14 +298,14 @@ def display_ext_values(data1, title1, data2, title2, x_label, y_label, scale):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
 
     # Plot the first chart
-    ax1.barh(labels1, values1)
+    ax1.barh(labels1, values1, color='lightblue')
     ax1.set_xlabel(f'{x_label}')
     ax1.set_ylabel(f'{y_label}')
     ax1.set_title(title1)
     ax1.set_xlim(scale * -1, 0)
 
     # Plot the second chart
-    ax2.barh(labels2, values2)
+    ax2.barh(labels2, values2, color='lightblue')
     ax2.set_xlabel(f'{x_label}')
     ax2.set_ylabel(f'{y_label}')
     ax2.set_title(title2)

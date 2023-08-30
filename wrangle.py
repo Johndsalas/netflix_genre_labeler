@@ -109,16 +109,14 @@ def lemmatizer(value):
 def remove_stopwords(value):
     ''' remove stopwords from text'''
 
-    # get list english language stopwords list from nlt
-    stopword_list = stopwords.words('english')
-
+    # get list of english language stopwords list from nlt
     stpwrd = nltk.corpus.stopwords.words('english')
     stpwrd.extend(['ing'])
 
 
     # split words in pandas value into a list and remove words from the list that are in stopwords or less than 3 letters
     value_words = value.split()
-    filtered_list = [word for word in value_words if (word not in stopword_list) and (len(word) >= 3)]
+    filtered_list = [word for word in value_words if (word not in stpwrd) and (len(word) >= 3)]
 
     # convert list back into string and return value
     return ' '.join(filtered_list)
