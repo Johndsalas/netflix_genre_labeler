@@ -39,11 +39,11 @@ The solution I came up with was to build a model that could predict whether a fi
     * Have a large representation in the data, for significance
     * Have a large number of genre unique words, for machine identifiability
     * Words that are only used in descriptions relating to that genre
-    * Be Intuitively distinct from other genres, for greatest chance of success
+    * Be intuitively distinct from other genres, for greatest chance of success
 
 * Examine test genre
     * How much of the data belongs to the test genre?
-    * What does the relative occurrence of words in comedy or non-comedy films tell us?
+    * What does the relative occurrence of words in the test genre or non-test genre films tell us?
 
 ## Pre-Modeling
 
@@ -59,7 +59,7 @@ The solution I came up with was to build a model that could predict whether a fi
 * Develop best possible model, as determined by overall accuracy
     * Vectorize data using 
         * Count
-        * TFIDF
+        * TF-IDF
     * Attempt to remove noise by dropping word columns with low relative frequency
         * By word count
         * By document count
@@ -83,7 +83,7 @@ The solution I came up with was to build a model that could predict whether a fi
    * Representation in the data
    * Number of unique words
    * High number of unique words appearing in each description
-   * human intuitability
+   * Human intuitability
 * The comedy genre was explored 
     * Data Split
         * Training data has a 60/40 split of comedy and non-comedy data 
@@ -119,14 +119,14 @@ The solution I came up with was to build a model that could predict whether a fi
         * Has an accuracy of 72.56% on test data 
         * Beats Baseline by  12.56%
     * Count vectorized data seems to outperform TF-IDF data by a small margin
-    * Removing word features due to low word frequency seems to outperform removing word features do to low document frequency by a small margin
+    * Removing word features due to low word frequency seems to outperform removing word features due to low document frequency by a small margin
     * At this time I do not recommend moving forward as I would like to see at least 80-90% accuracy form the model before doing so 
 
 # Next Steps
 
 * At this time the accuracy of the best performing model stands at 72.56% 
 * I would prefer to see an accuracy of 80-90% before moving on the the next stage of packaging the model to make similar predictions of all of the other genres
-* Reccomendations for next steps next steps is to focus on prodousing a more accurate model
+* Recommendations for next steps next steps is to focus on prodoucing a more accurate model
     * Focus on Logistic Regression models
         * This model was consistently the highest performer on its default settings
         * I might be able to get some extra accuracy by adjusting its hyperparameters
@@ -141,5 +141,5 @@ The solution I came up with was to build a model that could predict whether a fi
             * positive results would be predicted as comedy
             * negative results would be predicted as non-comedy  
     * Review model evaluation code for inefficiencies to address the evaluation run time issues
-    * Try tests on a different genre to see to they produce similar results
+    * Try tests on a different genre to see if they produce similar results
 * Once model accuracy can be confirmed at 80% or higher on at least one genre the next step is to create a pipeline to acquire, prepare, build and evaluate models that predict True/False for each genre in the dataset and evaluate the accuracy of models that are prepared as a part of this pipeline
