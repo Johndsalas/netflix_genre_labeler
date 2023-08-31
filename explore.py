@@ -289,7 +289,9 @@ def display_ext_values(data1, title1, data2, title2, x_label, y_label, scale):
 
     # Extract labels and values from the dictionaries
     labels1 = list(data1.keys())
-    values1 = list(data1.values()).reverse()
+    labels1.reverse()
+    values1 = list(data1.values())
+    values1.reverse()
 
     labels2 = list(data2.keys())
     values2 = list(data2.values())
