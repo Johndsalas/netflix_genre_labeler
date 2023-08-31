@@ -159,10 +159,38 @@ def get_vectorized_data(train_X, validate_X, test_X, vector):
     return train_X, validate_X, test_X
 
 
-def get_acc_table(train_X, train_y, validate_X, validate_y):
+def evaluate_model(train_X, train_y, validate_X, validate_y, clf, label, threshold):
+    ''' Evaluates Model on train and validate and prints line of evaluation chart'''
+    
+    obj = clf.fit(train_X, train_y)
+
+    train_score = obj.score(train_X, train_y)
+    train_score = str(round(train_score * 100, 2)) + "%"
+
+    validate_score = obj.score(validate_X, validate_y)
+    validate_score = str(round(validate_score * 100, 2)) + "%"
+
+    print("| {0:^9} | {1:^21}|{2:^19}|{3:^22}|".format(threshold, label, train_score, validate_score))
+    
+    
+def remove_low_freq(df_X, freq_dict, threshold):
+    ''' Restricts columns in vectorized df to those that have an relative frequency grater than threshold numbers from zero'''
+    
+    df_cols = list(df_X.columns)
+
+    new_cols = [col for col in df_cols if abs(freq_dict[col]) > threshold]
+ 
+    return df_X[new_cols]
+
+
+def get_acc_tables(train_X, train_y, validate_X, validate_y, freq_dict):
     ''' take in train data split into X and y, Validate data split into X and y
         print table of accuracy scores for train and validate data when run on each classifier in the list'''
 
+    # hold original input for train and valadate X data frames
+    original_train = train_X
+    original_validate = validate_X
+    
     # List of classifiers and labels
     clf_lst = [DecisionTreeClassifier(random_state = 411),
                RandomForestClassifier(random_state = 411),
@@ -176,60 +204,38 @@ def get_acc_table(train_X, train_y, validate_X, validate_y):
     
     index = 0
 
-    # print beginning of table
-    print('Accuracy Scores')
-    print('---------------')
-
     # Itterate through classifiers and evaluate each on train and validate 
     # Then print results in a table 
     for clf in clf_lst:
+        
+        # set train and validate df's to original input 
+        train_X = original_train
+        validate_X = original_validate
 
+        # Evaluate model with full vectorized data
         label = label_lst[index]
         
-        obj = clf.fit(train_X, train_y)
-        train_score = obj.score(train_X, train_y)
-        validate_score = obj.score(validate_X, validate_y)
+        threshold = "N/A"
 
-        print(f'{label} Train: {round(train_score, 4) * 100}% Validate: {round(validate_score,4) *100}%')
+        # print beginning of first table
+        print()
+        print(" _____________________________________________________________________________ ")
+        print("| Threshold |        Model         | Accuracy On Trian | Accuracy on Validate |")
+        print(" ----------------------------------------------------------------------------- ")
+        
+        # Build evaluate and print results of model in table
+        evaluate_model(train_X, train_y, validate_X, validate_y, clf, label, threshold)
 
-        index += 1
-
-
-def remove_low_freq(df_X, freq_dict, threshold):
-    ''' Restricts columns in vectorized df to those that have an relative frequency grater than threshold numbers from zero'''
-    
-    df_cols = list(df_X.columns)
-
-    new_cols = [col for col in df_cols if abs(freq_dict[col]) > threshold]
- 
-    return df_X[new_cols]
-  
-
-
-def get_acc_after_freq_drop(train_X, train_y, validate_X, validate_y, freq_lst, threshold):
-    ''' get accuracy table after dropping words from training data 
-        that have a relative freq less than the input number'''
-    
-    train_X = remove_low_freq(train_X, dict(freq_lst), threshold)
-    validate_X = remove_low_freq(validate_X, dict(freq_lst), threshold)
-
-    print()
-    print(f"Drop threshold is {threshold}")
-    get_acc_table(train_X, train_y, validate_X, validate_y)
-
-
-def get_test_eval(word_freq, train_counts, train_y, test_counts, test_y):
-    '''Gets evaluation of test data'''
-    
-    # Removing low relative frequency features
-    train_counts = remove_low_freq(train_counts, word_freq, 0)
-    test_counts = remove_low_freq(test_counts, word_freq, 0)
-
-    # creating and fiting test object
-    obj = LogisticRegression(random_state = 411)
-    obj.fit(train_counts, train_y)
-
-    # evaluating on test
-    test_score = obj.score(test_counts, test_y)
-
-    print(f'The top model predicts with {round(test_score, 4) * 100}% accuracy on test data')
+        # Itterate through thresholds 
+        for thresh in [0, 1, 2, 3, 4, 5]:
+             
+            train_X = remove_low_freq(train_X, freq_dict, thresh)
+            validate_X = remove_low_freq(validate_X, freq_dict, thresh)
+            
+            # Build evaluate and print results of model in table
+            evaluate_model(train_X, train_y, validate_X, validate_y, clf, label, thresh)
+            
+        # print bottom of table and beginning of the next table
+        print(" ----------------------------------------------------------------------------- ")
+            
+        index += 1  
