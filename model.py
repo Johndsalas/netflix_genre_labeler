@@ -239,3 +239,20 @@ def get_acc_tables(train_X, train_y, validate_X, validate_y, freq_dict):
         print(" ----------------------------------------------------------------------------- ")
             
         index += 1  
+
+
+def evaluate_model_test(train_X, train_y, test_X, test_y, freq_dict, threshold):
+    ''' Evaluates Model on test'''
+    
+    # remove low frequency values
+    train_X = remove_low_freq(train_X, freq_dict, threshold)
+    test_X = remove_low_freq(train_X, freq_dict, threshold)
+    
+    # Train model on train data
+    obj = LogisticRegression(random_state = 411).fit(train_X, train_y)
+
+    # Evaluate model on test data and print result
+    test_score = obj.score(test_X, test_y)
+    test_score = str(round(test_score * 100, 2))
+    
+    print(f"The top model predicts with {test_score}% accuracy on test data")

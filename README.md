@@ -80,24 +80,26 @@ The solution I came up with was to build a model that could predict whether a fi
 # Process Summary
 
 * Comedy was chosen as the test case to build a predictive model using the following criteria 
-   * Representation in the data
-   * Number of unique words
-   * High number of unique words appearing in each description
-   * Human intuitability
+    * Representation in the data
+    * Number of unique words
+    * High number of unique words appearing in each description
+    * human intuitability
 * The comedy genre was explored 
     * Data Split
         * Training data has a 60/40 split of comedy and non-comedy data 
             * This likely caused the relative frequency numbers to skew toward the negative
     * Relative Frequency Distribution
-        * Both relative frequency metrics showed values that normalize close to zero
-        * This shows that a majority of words are not likely to be strong indicators of comedy 
-        * Both metrics indicate a negative skew likely do to an imbalance in the data
-        * Word frequency seems to be more skewed than Document frequency
+        * Overall trends in the data were the same using relative word frequency and relative document frequency
+            * Majority of the data is between -5 and positive 5
+                * Concluded using removal thresholds that are between 0-5 to remove noise, would likely produce the most accurate models
+            * There is a negative skew to the data likely due to a 60/40 imbalance in the data
     * Extreme Value Words
-        * Extreme positive values are much closer to zero than their negative counterparts and include words that are intuitively indicative of comedy such as comedy, comedian, and standup
-        * Extreme negative values are much farther from zero and do not include words that are intuitively indicative of non-comedy films
-        * This gives evidence that low value words may be common words that appear more frequently in non-comedy films due to the data imbalance
-        * This also gives evidence that high value words are likely to be strong indicators of comedy films due to surviving the imbalance and being intuitively indicative of comedy films 
+        * Extreme positive values are much closer to zero than their negative counterparts 
+            * More evidence the data is skewed
+        * Extreme positive values represent words that are intuitively indicative of comedy
+        * Extreme negative words represent words that are not intuitively indicative of being non-comedy words 
+        * This gives evidence that the skew is likely having a high impact on the relative frequency data
+        * High positive value words are still likely to be strong indicators of comedy because the skew works against high positive value words
 * Methods were developed to predict comedy genre
     * Pre-Modeling Predictions
         * Predicting comedy using presence or number of unique words yielded disappointing results
@@ -109,37 +111,31 @@ The solution I came up with was to build a model that could predict whether a fi
                 * Override Accuracy 67%
             * Overall accuracy for both attempts were less than baseline
             * Override accuracy for both attempts were above baseline but worse then the final model 
-                * This means that using either method to override the predictions of the current model would in all likelihood yield less accurate predictions
+            * Methods are not viable for predicting comedy at this time
 * Machine learning models were developed to predict comedy genre
     * Top Performing Model 
         * Uses count vectorized data
         * Removes words using relative word frequency
         * Uses a threshold of 0
         * Is a Logistic Regression model
-        * Has an accuracy of 72.56% on test data 
-        * Beats Baseline by  12.56%
-    * Count vectorized data seems to outperform TF-IDF data by a small margin
-    * Removing word features due to low word frequency seems to outperform removing word features due to low document frequency by a small margin
-    * At this time I do not recommend moving forward as I would like to see at least 80-90% accuracy form the model before doing so 
+        * Has an accuracy of 72.99% on test data beating baseline by ~13%
+    * Count Vectorized data seems to outperform TF-IDF data by a small margin
+    * Removing word features due to low word frequency seems to outperform removing word features do to low document frequency by a small margin
 
-# Next Steps
+# Next Steps and Recommendations
 
-* At this time the accuracy of the best performing model stands at 72.56% 
-* I would prefer to see an accuracy of 80-90% before moving on the the next stage of packaging the model to make similar predictions of all of the other genres
-* Recommendations for next steps next steps is to focus on prodoucing a more accurate model
+* At this time the accuracy of the best performing model stands at 72.99% beating baseline by ~13%
+* Enough promise has been shown for me to recommend moving forward with constructing a pipeline to create and evaluate  models for predicting each genre individually 
+* I also recommend putting more time into developing a more accurate model using the following guidelines 
     * Focus on Logistic Regression models
         * This model was consistently the highest performer on its default settings
-        * I might be able to get some extra accuracy by adjusting its hyperparameters
+        * It may be possible to increase its accuracy by adjusting its hyperparameters
     * Focus on count vectorized Data
         * This type of vectorization seems to result in slightly higher accuracy than TF-IDF
-    * Focus on Relative frequency by word count
-        * Removing word features with a low relative word frequency resulted in a small boost to the final models accuracy
-        * It also seems to have a slightly better effect on accuracy than using relative document frequency
-        * Normalize relative frequency values to account for skews in the data
+    * Focus on relative frequency by word count
+        * Removing low relative frequency words seems to outperform removing words with low document frequency 
+        * Normalize relative frequency values to avoid skewing the data  
     * Rethink non-modeling approach to predictions
-        * Instead of using unique words predict values using by adding the relative frequency numbers of all of the words in the description
-            * positive results would be predicted as comedy
-            * negative results would be predicted as non-comedy  
-    * Review model evaluation code for inefficiencies to address the evaluation run time issues
-    * Try tests on a different genre to see if they produce similar results
-* Once model accuracy can be confirmed at 80% or higher on at least one genre the next step is to create a pipeline to acquire, prepare, build and evaluate models that predict True/False for each genre in the dataset and evaluate the accuracy of models that are prepared as a part of this pipeline
+        * Try making predictions by adding the relative frequency numbers of all of the words in the description
+            * positive results would be predicted as comedy 
+            * negative results would be predicted as non-comedy
