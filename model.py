@@ -37,7 +37,7 @@ def is_present_value(value, gen_set, non_gen_set):
     
     else:
         
-        return "contains niether"
+        return "contains neither"
     
 
 def by_number_value(value, gen_set, non_gen_set):
@@ -220,7 +220,7 @@ def get_acc_tables(train_X, train_y, validate_X, validate_y, freq_dict):
         # print beginning of first table
         print()
         print(" _____________________________________________________________________________ ")
-        print("| Threshold |        Model         | Accuracy On Trian | Accuracy on Validate |")
+        print("| Threshold |        Model         | Accuracy On Train | Accuracy on Validate |")
         print(" ----------------------------------------------------------------------------- ")
         
         # Build evaluate and print results of model in table
@@ -246,7 +246,7 @@ def evaluate_model_test(train_X, train_y, test_X, test_y, freq_dict, threshold):
     
     # remove low frequency values
     train_X = remove_low_freq(train_X, freq_dict, threshold)
-    test_X = remove_low_freq(train_X, freq_dict, threshold)
+    test_X = remove_low_freq(test_X, freq_dict, threshold)
     
     # Train model on train data
     obj = LogisticRegression(random_state = 411).fit(train_X, train_y)
