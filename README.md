@@ -140,6 +140,6 @@ The solution I came up with was to build a model that could predict whether a fi
         * Normalize relative frequency values to avoid skewing the data  
     * Rethink non-modeling approach to predictions
         * Try making predictions by adding the relative frequency numbers of all of the words in the description
-            * positive results would be predicted as comedy 
-            * negative results would be predicted as non-comedy
+            * Positive results would be predicted as comedy 
+            * Negative results would be predicted as non-comedy
               
