@@ -1,4 +1,4 @@
-# netflix_genre_labeler
+# Netflix Genre Labeler
 
 # Description:
 
