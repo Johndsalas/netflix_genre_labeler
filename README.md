@@ -7,7 +7,7 @@ Streaming services such as Netflix and Hulu are regularly in need of updating th
 # Initial Thoughts
 Upon viewing the data I encountered a problem. Films were not classified as one genre or another exclusively. In fact most of the films were classified as a list of genres. While this makes sense, a film can easily fall under more than one genre. It means that I will not be able to use genre as my target variable.
 
-The solution I came up with was to build a model that could predict whether a film was or was not a given genre. If an accurate model could be developed for one genre it is likely that the model building method could be generalized to creating a predictive model for each genre. Each model could then be run on the data to create a comprehinsive list of all of the genres that a given film is a part of
+The solution I came up with was to build a model that could predict whether a film is or is not in a given genre. If an accurate model could be developed for one genre it is likely that the model building method could be generalized to develop a predictive model for each genre. Each model could then be run on the data to create a comprehinsive list of all of the genres that a given film is a part of
 
 # Goal:
 
@@ -36,10 +36,12 @@ The solution I came up with was to build a model that could predict whether a fi
 * Explore genres and choose a genre to use as a test case
 
 * Test Genre should:
-    * Have a large representation in the data, for significance
-    * Have a large number of genre unique words, for machine identifiability
-    * Words that are only used in descriptions relating to that genre
-    * Be intuitively distinct from other genres, for greatest chance of success
+    * Have a large representation in the data
+       * for significance
+    * Have a large number of genre unique words, words that are only used in descriptions relating to that genre
+       * for machine identifiability
+    * Be intuitively distinct from other genres
+       * for greatest chance of success
 
 * Examine test genre
     * How much of the data belongs to the test genre?
@@ -53,7 +55,8 @@ The solution I came up with was to build a model that could predict whether a fi
     * Evaluate using accuracy and override accuracy, accuracy of True/False predictions only
         * A method with high enough accuracy could be used to in place of a traditional machine learning model
         * A method with high enough override accuracy could be used in conjunction with a traditional machine learning model to improve its accuracy
-
+    * Predictions will be evaluated using validate data
+      
 ## Model
 
 * Develop best possible model, as determined by overall accuracy
@@ -86,19 +89,19 @@ The solution I came up with was to build a model that could predict whether a fi
     * human intuitability
 * The comedy genre was explored 
     * Data Split
-        * Training data has a 60/40 split of comedy and non-comedy data 
+        * Training data has 60% comedy and 40% non-comedy data 
             * This likely caused the relative frequency numbers to skew toward the negative
     * Relative Frequency Distribution
         * Overall trends in the data were the same using relative word frequency and relative document frequency
-            * Majority of the data is between -5 and positive 5
-                * Concluded using removal thresholds that are between 0-5 to remove noise, would likely produce the most accurate models
-            * There is a negative skew to the data likely due to a 60/40 imbalance in the data
+            * Majority of the data is between -5 and 5
+                * Concluded using removal thresholds that are between 0-5 to remove noise would likely produce the most accurate models
+            * There is a negative skew to the data likely due to the 60/40 imbalance in the data
     * Extreme Value Words
         * Extreme positive values are much closer to zero than their negative counterparts 
             * More evidence the data is skewed
-        * Extreme positive values represent words that are intuitively indicative of comedy
-        * Extreme negative words represent words that are not intuitively indicative of being non-comedy words 
-        * This gives evidence that the skew is likely having a high impact on the relative frequency data
+        * Extreme positive values represent words that are intuitively indicative of comedy films
+        * Extreme negative words represent words that are not intuitively indicative of non-comedy films 
+            * This gives evidence that the skew is likely having an impact on the relative frequency data
         * High positive value words are still likely to be strong indicators of comedy because the skew works against high positive value words
 * Methods were developed to predict comedy genre
     * Pre-Modeling Predictions
@@ -125,7 +128,7 @@ The solution I came up with was to build a model that could predict whether a fi
 # Next Steps and Recommendations
 
 * At this time the accuracy of the best performing model stands at 72.99% beating baseline by ~13%
-* Enough promise has been shown for me to recommend moving forward with constructing a pipeline to create and evaluate  models for predicting each genre individually 
+* Enough promise has been shown for me to recommend moving forward with constructing a pipeline to create and evaluate models for predicting each genre individually 
 * I also recommend putting more time into developing a more accurate model using the following guidelines 
     * Focus on Logistic Regression models
         * This model was consistently the highest performer on its default settings
@@ -139,3 +142,4 @@ The solution I came up with was to build a model that could predict whether a fi
         * Try making predictions by adding the relative frequency numbers of all of the words in the description
             * positive results would be predicted as comedy 
             * negative results would be predicted as non-comedy
+              
