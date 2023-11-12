@@ -1,6 +1,6 @@
 # Netflix Genre Labeler
 
-# Description:
+# Description
 
 Streaming services such as Netflix and Hulu are regularly in need of updating the shows they offer on their platform. A major way those shows are recommended to customers is by their genre. Customers will often search for something to watch by scrolling through films of a particular genre until they find something that catches their eye. This means that properly labeling a movie’s genre is an important part of meeting customer’s expectations. This combined with a constant need to update which shows appear on a given platform made me curious as to whether I could develop a machine learning model that was capable of predicting a film's genre based on the description of the film. If successful this algorithm would provide genre labels for films that could be fed into more complex recommendation algorithms without the need to rely on time consuming human labor to provide those labels.
 
@@ -9,7 +9,7 @@ Upon viewing the data I encountered a problem. Films were not classified as one 
 
 The solution I came up with was to build a model that could predict whether a film is or is not in a given genre. If an accurate model could be developed for one genre it is likely that the model building method could be generalized to develop a predictive model for each genre. Each model could then be run on the data to create a comprehinsive list of all of the genres that a given film is a part of
 
-# Goal:
+# Goal
 
 * Choose a genre as a test case for model development
 * Build a Classification model to predict whether a film is or is not the test case genre
@@ -22,7 +22,7 @@ The solution I came up with was to build a model that could predict whether a fi
 | comedy | Identifies whether the film is in the comedy genre, engineered from genre feature |
 | description | Description of film |
 
-# Plan:
+# Plan
 
 ## Wrangle
 
@@ -142,4 +142,3 @@ The solution I came up with was to build a model that could predict whether a fi
         * Try making predictions by adding the relative frequency numbers of all of the words in the description
             * Positive results would be predicted as comedy 
             * Negative results would be predicted as non-comedy
-              
